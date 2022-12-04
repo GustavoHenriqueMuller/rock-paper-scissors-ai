@@ -1,6 +1,4 @@
-import glob
 import time
-
 import numpy as np
 
 # Define possible gestures as constants
@@ -12,8 +10,15 @@ SCISSORS = 2
 gestureTxt = {ROCK: 'rock', PAPER: 'paper', SCISSORS: 'scissors'}
 
 # Define paths to raw image folders
-imgPathsRaw = {ROCK: './img/rock/', PAPER: './img/paper/',
-               SCISSORS: './img/scissors/'}
+imagePathsRaw = {ROCK: './img/rock/', PAPER: './img/paper/', SCISSORS: './img/scissors/'}
+
+def getGestureNameByIndex(gestureIndex):
+    if gestureIndex == ROCK:
+        return "rock"
+    elif gestureIndex == PAPER:
+        return "paper"
+    elif gestureIndex == SCISSORS:
+        return "scissors"
 
 class Filter1D:
     """A one dimensional filter class. Useful for real-time filtering of noisy
@@ -34,9 +39,11 @@ class Filter1D:
         exceeds the maxSize attribute, the older data points will be trimmed
         from the array (left trim). dataPoint can be a single point, a list or
         a numpy one dimensional array."""
-        ##  Append new data point(s) to end of array
+
+        # Append new data point(s) to end of array
         self._data = np.insert(self._data, self._data.size, dataPoint)
-        ##  Trim begining of array if longer than maxSize
+
+        # Trim begining of array if longer than maxSize
         if self._data.size > self._maxSize:
             self._data = self._data[self._data.size - self._maxSize:]
 
@@ -77,59 +84,3 @@ class Filter1D:
             return np.median(self._data[-windowSize:])
         else:
             raise ValueError("windowSize must be an odd integer <= maxSize")
-
-class Timer:
-    def __init__(self):
-        """A timer that can be used to measure elapsed time, manage time steps
-        in loops, control execution times, etc.
-        The constructor, starts the timer at instantiation."""
-        self.paused = False
-        self.pauseInitTime = None
-        self.pauseElapsed = 0
-        self.initTime = time.time()
-
-    def getElapsed(self):
-        """Returns the time elapsed since instantiation or last reset minus sum
-        of paused time."""
-        if self.paused:
-            return self.pauseInitTime - self.initTime - self.pauseElapsed
-        else:
-            return time.time() - self.initTime - self.pauseElapsed
-
-    def isWithin(self, delay):
-        """Returns True if elapsed time is within (less than) delay argument.
-        This method is useful to control execution of while loops for a fixed
-        time duration."""
-        if self.getElapsed() < delay:
-            return True
-        else:
-            return False
-
-    def pause(self):
-        """Pauses the timer."""
-        self.pauseInitTime = time.time()
-        self.paused = True
-
-    def reset(self):
-        """Resets the timer initial time to current time."""
-        self.paused = False
-        self.pauseInitTime = None
-        self.pauseElapsed = 0
-        self.initTime = time.time()
-
-    def resume(self):
-        """Resumes the timer following call to .pause() method."""
-        if self.paused:
-            self.pauseElapsed += time.time() - self.pauseInitTime
-            self.paused = False
-        else:
-            print("Warning: Timer.resume() called without prior call to Timer.pause()")
-
-    def sleepToElapsed(self, delay, reset = True):
-        """Sleeps until elapsed time reaches delay argument. If reset argument
-        is set to True (default), the timer will also be reset. This method is
-        useful to control fixed time steps in loops."""
-        if self.getElapsed() < delay:
-            time.sleep(delay - self.getElapsed())
-        if reset:
-            self.reset()

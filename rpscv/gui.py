@@ -5,8 +5,9 @@ import cv2
 import pygame as pg
 import pygame.freetype
 
-class RPSGUI():
+from rpscv import utils
 
+class RPSGUI():
     def __init__(self, loop = False):
         pg.init()
 
@@ -14,7 +15,9 @@ class RPSGUI():
         self.sWidth = 640
         self.sHeight = 480
         self.surf = pg.display.set_mode((self.sWidth, self.sHeight))
-        pg.display.set_caption('Rock-Paper-Scissors by drgfreeman@tuta.io')
+
+        pg.display.set_caption('Rock paper scissors - Trabalho M3 IA')
+
         self.playerScore = 0
         self.computerScore = 0
         self.playerImage = pg.Surface((200, 300))
@@ -27,7 +30,7 @@ class RPSGUI():
         self.computerZonePosition = (355, 145)
         self.winner = None
 
-        # colors
+        # Colors
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
         self.RED = (255, 0, 0)
@@ -132,11 +135,17 @@ class RPSGUI():
         self.playerScore = 0
         self.computerScore = 0
 
-    def setComputerImage(self, img):
-        self.computerImage = pg.surfarray.make_surface(img[:,::-1,:])
+    def setPlayerMove(self, image, gestureIndex):
+        font = pg.freetype.SysFont(None, 40)
 
-    def setPlayerImage(self, img):
-        self.playerImage = pg.surfarray.make_surface(img[::-1,:,:])
+        playerMoveZone = pg.Surface((400, 200))
+        playerMoveText = font.render(utils.getGestureNameByIndex(gestureIndex), self.BLACK)
+
+        self.blitTextAlignCenter(playerMoveZone, playerMoveText, (200, 110))
+        self.playerImage = pg.surfarray.make_surface(image[::-1,:,:])
+    
+    def setComputerMove(self, image, gestureIndex):
+        self.computerImage = pg.surfarray.make_surface(image[:,::-1,:])   
 
     def setWinner(self, winner):
         self.winner = winner

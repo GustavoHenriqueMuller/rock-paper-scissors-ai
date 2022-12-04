@@ -28,7 +28,7 @@ def promptFile():
 
 def saveImage(img, gesture, notify=False):
     # Define image path and filename
-    folder = utils.imgPathsRaw[gesture]
+    folder = utils.imagePathsRaw[gesture]
     name = utils.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
     extension = '.png'
 
@@ -44,6 +44,8 @@ if __name__ == '__main__':
     try:
         # Initialize game mode variables
         loop = False
+        maxScore = 5
+        timeBetweenRounds = 3000 # ms
 
         # Read command line arguments
         if len(sys.argv) > 1:
@@ -58,9 +60,6 @@ if __name__ == '__main__':
 
         with open(classifierFilename, 'rb') as f:
             classifier = pickle.load(f)
-
-        # Define score at which game ends
-        maxScore = 5
 
         # Initialize GUI
         gui = RPSGUI(loop = loop)
@@ -77,7 +76,7 @@ if __name__ == '__main__':
         inputImage = cv2.imread('img/gui/scissors.png', cv2.IMREAD_COLOR)
         computerImages[utils.SCISSORS] = cv2.cvtColor(inputImage, cv2.COLOR_BGR2RGB)
 
-        # Load green image
+        # Load empty image
         emptyImage = cv2.imread('img/gui/empty.png', cv2.IMREAD_COLOR)
         emptyImage = cv2.cvtColor(emptyImage, cv2.COLOR_BGR2RGB)
 
@@ -86,32 +85,22 @@ if __name__ == '__main__':
             inputImagePath = promptFile()
             inputImage = cv2.imread(inputImagePath)
 
-            # Convert image to RGB (from BGR)
             inputImageRGB = cv2.cvtColor(inputImage, cv2.COLOR_BGR2RGB)
-
-            # Set player image to imgRGB
-            gui.setPlayerImage(inputImageRGB)
-
-            # Get grayscale image
             inputImageGrayscale = imp.getGray(inputImageRGB, threshold = 17)
 
-            # Count non-background pixels
             amountNonZeroPixels = np.count_nonzero(inputImageGrayscale)
-
-            # Define waiting time
-            waitTime = 3000
 
             # Check if player hand is present
             if amountNonZeroPixels > 9000:
                 # Player predicted gesture
-                predictedGesture = classifier.predict([inputImageGrayscale])[0]
-
-                # Computer gesture
+                playerGesture = classifier.predict([inputImageGrayscale])[0]
                 computerGesture = random.randint(0,2)
 
+                gestureDifference = computerGesture - playerGesture
+
                 # Set computer image to computer gesture
-                gui.setComputerImage(computerImages[computerGesture])
-                gestureDifference = computerGesture - predictedGesture
+                gui.setPlayerMove(inputImageRGB, playerGesture)
+                gui.setComputerMove(computerImages[computerGesture], computerGesture)
 
                 if gestureDifference in [-2, 1]:
                     gui.setWinner('computer')
@@ -121,7 +110,7 @@ if __name__ == '__main__':
                     gui.setWinner(None)
             else:
                 # Set computer image to green
-                gui.setComputerImage(emptyImage)
+                gui.setComputerMove(emptyImage)
                 gui.setWinner(None)
 
             # Draw GUI
@@ -131,7 +120,7 @@ if __name__ == '__main__':
             pg.display.flip()
 
             # Wait
-            pg.time.wait(waitTime)
+            pg.time.wait(timeBetweenRounds)
 
             # Check pygame events
             for event in pg.event.get():

@@ -18,9 +18,9 @@ scoring = 'f1_micro'
 
 # The n_jobs parameter controls the number of CPU cores to use in parallel for
 # training the machine learning model.
-n_jobs = 1
+n_jobs = 4
 
-def train(nbImg = 0, showCvScore = True):
+def train(showCvScore = True):
     import time
     t0 = time.time()
 
@@ -46,7 +46,7 @@ def train(nbImg = 0, showCvScore = True):
 
     # Generate image data from stored images
     print('+{}s: Generating image data'.format(dt()))
-    features, labels = imp.generateGrayFeatures(nbImg = nbImg, verbose = False, rs = rs)
+    features, labels = imp.generateGrayFeatures(verbose = False, randomSeed = rs)
 
     unique, count = np.unique(labels, return_counts = True)
 
@@ -57,6 +57,7 @@ def train(nbImg = 0, showCvScore = True):
     # Generate test set
     print('+{}s: Generating test set'.format(dt()))
     sssplit = StratifiedShuffleSplit(n_splits = 1, test_size = .15, random_state = rs)
+
     for train_index, test_index in sssplit.split(features, labels):
         features_train = features[train_index]
         features_test = features[test_index]
