@@ -45,7 +45,7 @@ def generateGrayFeatures(imageShape = (200, 300, 3), verbose = False, randomSeed
 
             # Load image as a numpy array
             image = imread(imagePath)
-            #image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR) TODO
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
             if image.shape == imageShape:
                 # Generate and store image features in features array
@@ -65,17 +65,8 @@ def generateGrayFeatures(imageShape = (200, 300, 3), verbose = False, randomSeed
 
 
 def getGray(image, hueValue = 63, threshold = 0):
-    """Returns the grayscale of the source image with its background
-    removed as a 1D feature vector."""
-
-    cv2.imshow("Original", image)
-    cv2.waitKey(0)
-
     image = removeBackground(image, hueValue, threshold)
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY).astype(np.float32) / 2553
-
-    cv2.imshow("Grayscale", image)
-    cv2.waitKey(0)
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255
 
     return image.ravel()
 

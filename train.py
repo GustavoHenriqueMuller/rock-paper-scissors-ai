@@ -68,7 +68,7 @@ def train(showCvScore = True):
     print('+{}s: Defining pipeline'.format(dt()))
     steps = [('pca', PCA()), ('clf', SVC(kernel = 'rbf'))]
     pipe = Pipeline(steps)
-
+    
     # Define cross-validation parameters
     print('+{}s: Defining cross-validation'.format(dt()))
     cv = StratifiedKFold(n_splits = n_splits, shuffle = True, random_state = rs)
