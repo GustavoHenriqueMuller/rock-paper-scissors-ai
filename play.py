@@ -39,22 +39,13 @@ def saveImage(img, gesture, notify=False):
     # Save image
     cv2.imwrite(folder + name + extension, img)
 
-if __name__ == '__main__':
+def main():
     system('cls')
 
     try:
         # Initialize game mode variables
-        loop = False
-        maxScore = 5
+        maxScore = 1
         timeBetweenRounds = 3000 # ms
-
-        # Read command line arguments
-        if len(sys.argv) > 1:
-            for arg in sys.argv[1:]:
-                if arg == 'loop':
-                    loop = True
-                else:
-                    print('{} is not a recognized argument'.format(arg))
 
         # Load classifier from pickle file
         classifierFilename = 'classifier.pkl'
@@ -63,7 +54,7 @@ if __name__ == '__main__':
             classifier = pickle.load(f)
 
         # Initialize GUI
-        gui = RPSGUI(loop = loop)
+        gui = RPSGUI()
 
         # Load static images for computer gestures
         computerImages = {}
@@ -140,3 +131,6 @@ if __name__ == '__main__':
 
     finally:
         f.close()
+
+if __name__ == '__main__':
+    main()

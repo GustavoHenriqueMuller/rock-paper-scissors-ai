@@ -8,10 +8,10 @@ import pygame.freetype
 from rpscv import utils
 
 class RPSGUI():
-    def __init__(self, loop = False):
+    def __init__(self):
         pg.init()
 
-        self.loop = loop
+        self.loop = True
         self.sWidth = 640
         self.sHeight = 480
         self.surf = pg.display.set_mode((self.sWidth, self.sHeight))
@@ -83,7 +83,7 @@ class RPSGUI():
         goZone = pg.Surface((400, 200))
 
         # Fill surface with background color
-        goZone.fill(self.WHITE)
+        goZone.fill(self.BLACK)
 
         # Draw box around surface
         vertices = [(3, 3), (396, 3), (396, 196), (3, 196), (3, 3)]
@@ -91,7 +91,7 @@ class RPSGUI():
 
         # Render text on surface
         font = pg.freetype.SysFont(None, 40)
-        gameOverText = font.render('GAME OVER', self.BLACK)
+        gameOverText = font.render('GAME OVER', self.WHITE)
         self.blitTextAlignCenter(goZone, gameOverText, (200, 45))
 
         if self.playerScore > self.computerScore:
@@ -129,7 +129,7 @@ class RPSGUI():
         font = pg.freetype.SysFont(None, 40)
 
         playerMoveZone = pg.Surface((400, 200))
-        playerMoveText = font.render(utils.getGestureNameByIndex(gestureIndex), self.BLACK)
+        playerMoveText = font.render(utils.gestureTexts[gestureIndex], self.BLACK)
 
         self.blitTextAlignCenter(playerMoveZone, playerMoveText, (200, 110))
         self.playerMove = gestureIndex
