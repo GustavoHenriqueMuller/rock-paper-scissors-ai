@@ -1,6 +1,6 @@
 # RockPaperScissorsAI
 
-Para instalar as dependências, execute:
+Para instalar as dependências, execute:  
 ```pip install scikit-learn```  
 ```pip install scikit-image```  
 ```pip install opencv-python```  
