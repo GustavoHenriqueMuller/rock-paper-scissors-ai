@@ -1,12 +1,13 @@
 import sys
 import numpy as np
+from sklearn.metrics import RocCurveDisplay
 
 randomState = 42
 pklFilename = 'clf.pkl'
 nSplits = 5
-pca__n_components = [40] # Number of components of Principal Component Analysis
-clf__gamma = np.logspace(-4, -2, 3) # [.0001, .001, .01]
-clf__C = np.logspace(0, 2, 3) # [1, 10, 100]
+pca__n_components = [40]
+clf__gamma = [.0001, .001, .01]
+clf__C = [1, 10, 100]
 scoring = 'f1_micro'
 nJobs = 4
 
