@@ -44,7 +44,7 @@ def main():
 
     try:
         # Initialize game mode variables
-        maxScore = 1
+        maxScore = 5
         timeBetweenRounds = 3000 # ms
 
         # Load classifier from pickle file
