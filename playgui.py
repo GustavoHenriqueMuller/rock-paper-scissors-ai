@@ -81,6 +81,12 @@ if __name__ == '__main__':
         emptyImage = cv2.cvtColor(emptyImage, cv2.COLOR_BGR2RGB)
 
         while True:
+            # Draw GUI
+            gui.draw()
+
+            # Flip pygame display
+            pg.display.flip()
+
             # Get image from camera
             inputImagePath = promptFile()
             inputImage = cv2.imread(inputImagePath)

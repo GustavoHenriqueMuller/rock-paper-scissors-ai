@@ -20,12 +20,12 @@ class RPSGUI():
 
         self.playerScore = 0
         self.computerScore = 0
+        self.playerMove = -1
+        self.computerMove = -1
         self.playerImage = pg.Surface((200, 300))
         self.computerImage = pg.Surface((200, 300))
         self.playerImagePosition = (60, 160)
         self.computerImagePosition = (380, 160)
-        self.playerZone = pg.Surface((250, 330))
-        self.computerZone = pg.Surface((250, 330))
         self.playerZonePosition = (35, 145)
         self.computerZonePosition = (355, 145)
         self.winner = None
@@ -43,50 +43,40 @@ class RPSGUI():
 
     def draw(self):
         # Fill surface with background color
-        self.surf.fill(self.WHITE)
-
-        # Draw boxes around computer and player areas
-        playerVertices = [(5, 3), (315, 3), (315, 476), (5, 476), (5, 3)]
-        pg.draw.polygon(self.surf, self.BLACK, playerVertices, 1)
-
-        computerVertices = [(325, 3), (634, 3), (634, 476), (325, 476), (325, 3)]
-        pg.draw.polygon(self.surf, self.BLACK, computerVertices, 1)
+        self.surf.fill(self.BLACK)
 
         # Render computer and player text
         font = pg.freetype.SysFont(None, 30)
-        text = font.render('PLAYER', self.BLACK)
-        self.blitTextAlignCenter(self.surf, text, (160,15))
-        text = font.render('COMPUTER', self.BLACK)
-        self.blitTextAlignCenter(self.surf, text, (480,15))
 
-        # Set computer and player zone colors
-        if self.winner == 'player':
-            self.playerZone.fill(self.GREEN)
-            self.computerZone.fill(self.RED)
-        elif self.winner == 'computer':
-            self.playerZone.fill(self.RED)
-            self.computerZone.fill(self.GREEN)
-        elif self.winner == 'tie':
-            self.playerZone.fill(self.BLUE)
-            self.computerZone.fill(self.BLUE)
-        else:
-            self.playerZone.fill(self.WHITE)
-            self.computerZone.fill(self.WHITE)
+        text = font.render('PLAYER', self.WHITE)
+        self.blitTextAlignCenter(self.surf, text, (160, 105))
 
-        # Blit computer and player zone
-        self.surf.blit(self.playerZone, self.playerZonePosition)
-        self.surf.blit(self.computerZone, self.computerZonePosition)
+        if self.playerMove != -1:
+            font = pg.freetype.SysFont(None, 20)
+            text = font.render(utils.getGestureNameByIndex(self.playerMove).capitalize(), self.WHITE)
+            self.blitTextAlignCenter(self.surf, text, (160, 135))
+
+        font = pg.freetype.SysFont(None, 30)
+        text = font.render('COMPUTER', self.WHITE)
+        self.blitTextAlignCenter(self.surf, text, (480, 105))
+
+        if self.computerMove != -1:
+            font = pg.freetype.SysFont(None, 20)
+            text = font.render(utils.getGestureNameByIndex(self.computerMove).capitalize(), self.WHITE)
+            self.blitTextAlignCenter(self.surf, text, (480, 135))
+
+        font = pg.freetype.SysFont(None, 30)
 
         # Blit computer and player images
         self.surf.blit(self.playerImage, self.playerImagePosition)
         self.surf.blit(self.computerImage, self.computerImagePosition)
 
         # Render computer and player scores
-        font = pg.freetype.SysFont(None, 100)
-        text = font.render(str(self.playerScore), self.BLACK)
-        self.blitTextAlignCenter(self.surf, text, (160, 60))
-        text = font.render(str(self.computerScore), self.BLACK)
-        self.blitTextAlignCenter(self.surf, text, (480, 60))
+        font = pg.freetype.SysFont(None, 80)
+        text = font.render(str(self.playerScore), self.WHITE)
+        self.blitTextAlignCenter(self.surf, text, (160, 15))
+        text = font.render(str(self.computerScore), self.WHITE)
+        self.blitTextAlignCenter(self.surf, text, (480, 15))
 
     def gameOver(self, delay = 3500):
         # Create surface for Game Over message
@@ -142,9 +132,11 @@ class RPSGUI():
         playerMoveText = font.render(utils.getGestureNameByIndex(gestureIndex), self.BLACK)
 
         self.blitTextAlignCenter(playerMoveZone, playerMoveText, (200, 110))
+        self.playerMove = gestureIndex
         self.playerImage = pg.surfarray.make_surface(image[::-1,:,:])
     
     def setComputerMove(self, image, gestureIndex):
+        self.computerMove = gestureIndex
         self.computerImage = pg.surfarray.make_surface(image[:,::-1,:])   
 
     def setWinner(self, winner):
