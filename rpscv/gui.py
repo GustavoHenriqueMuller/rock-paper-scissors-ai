@@ -53,7 +53,7 @@ class RPSGUI():
 
         if self.playerMove != -1:
             font = pg.freetype.SysFont(None, 20)
-            text = font.render(utils.getGestureNameByIndex(self.playerMove).capitalize(), self.WHITE)
+            text = font.render(utils.gestureTexts[self.playerMove].capitalize(), self.WHITE)
             self.blitTextAlignCenter(self.surf, text, (160, 135))
 
         font = pg.freetype.SysFont(None, 30)
@@ -62,7 +62,7 @@ class RPSGUI():
 
         if self.computerMove != -1:
             font = pg.freetype.SysFont(None, 20)
-            text = font.render(utils.getGestureNameByIndex(self.computerMove).capitalize(), self.WHITE)
+            text = font.render(utils.gestureTexts[self.computerMove].capitalize(), self.WHITE)
             self.blitTextAlignCenter(self.surf, text, (480, 135))
 
         font = pg.freetype.SysFont(None, 30)
