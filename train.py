@@ -25,7 +25,7 @@ def main():
 
 def train():
     # Defining constants
-    randomState = 16
+    randomSeed = 42
     classifierFileName = 'classifier.pkl'
     nSplits = 5
     pcaNumberComponents = [40]
@@ -38,7 +38,7 @@ def train():
 
     # Generate image data from stored images
     print('+{}s: Generating image data'.format(dt(t0)))
-    features, labels = imp.generateGrayFeatures(verbose = False, randomSeed = randomState)
+    features, labels = imp.generateGrayFeatures(verbose = False, randomSeed = randomSeed)
 
     unique, count = numpy.unique(labels, return_counts = True)
 
@@ -48,7 +48,7 @@ def train():
 
     # Generate test set
     print('+{}s: Generating test set'.format(dt(t0)))
-    stratifiedKFold = StratifiedKFold(n_splits = 10, shuffle = True, random_state = randomState)
+    stratifiedKFold = StratifiedKFold(n_splits = 10, shuffle = True, random_state = randomSeed)
 
     for train_index, test_index in stratifiedKFold.split(features, labels):
         features_train = features[train_index]
@@ -63,7 +63,7 @@ def train():
     
     # Define cross-validation parameters
     print('+{}s: Defining cross-validation'.format(dt(t0)))
-    crossValidator = StratifiedKFold(n_splits = nSplits, shuffle = True, random_state = randomState)
+    crossValidator = StratifiedKFold(n_splits = nSplits, shuffle = True, random_state = randomSeed)
 
     # Define grid-search parameters
     print('+{}s: Defining grid search'.format(dt(t0)))
