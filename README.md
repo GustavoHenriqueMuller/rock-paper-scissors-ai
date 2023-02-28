@@ -1,4 +1,4 @@
-# RockPaperScissorsAI
+# rock-paper-scissors-ai
 
 Para instalar as dependências, execute:  
 ```pip install scikit-learn```  
